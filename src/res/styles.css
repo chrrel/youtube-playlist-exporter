@@ -1,3 +1,4 @@
+/* Layout */
 html, body {
     margin: 0;
     padding: 0;
@@ -11,7 +12,7 @@ body {
 }
 
 header {
-    background: #FFFFFF;
+    background: #ffffff;
     color: rgb(204, 0, 0);
     padding: 0.8rem 0;
     text-align: center;
@@ -23,6 +24,49 @@ main {
     background: #f1f1f1;
     border: 1px solid #d9d9d9;
     display: flex;
+}
+
+@media only screen and (max-width: 1000px) {
+    main {
+        width: 85%;
+        flex-direction: column;
+    }
+}
+
+/* List of playlists */
+.playlists-list  {
+    flex-basis: 25%;
+    flex-grow: 1;
+    background: #ffffff;
+    font-size: 1rem;
+}
+
+.playlists-list a, .playlists-list a:visited {
+    color: #484849;
+    text-decoration: none;
+    display: block;
+    padding: 15px 25px;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.playlists-list a:hover, .playlists-list a:active, .playlists-list a.active, .active-playlist {
+    background: #bfbfbf;
+}
+
+/* Single Playlist */
+.playlist {
+    flex-basis: 0;
+    flex-grow: 999;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.single-playlist {
+    display: none;
+}
+
+.active {
+    display: block;
 }
 
 .video {
@@ -41,15 +85,16 @@ main {
     margin: 0 15px 0 0;
 }
 
-header h1 {
+a, a:link, a:visited {
+    color: #484849;
+    text-decoration: none;
+}
+
+/* Headings */
+h1 {
     margin: 0;
     font-weight: normal;
     font-size: 1.6rem;
-}
-
-header h1 span {
-    font-weight: bold;
-    color: #212121;
 }
 
 h2 {
@@ -67,60 +112,9 @@ h4 {
     font-size: 1.05rem;
     font-weight: normal;
     margin: 0.5rem 0;
-
 }
 
-a, a:link, a:visited {
-    color: #484849;
-    text-decoration: none;
-}
-
-.playlists-list span {
-    margin: 0.2rem 0.2rem;
-    padding: 5px 12px;
-    display: inline-block;
-    background: #cc0000;
-    color: #ffffff;
-}
-
-.playlists-list  {
-    flex-basis: 25%;
-    flex-grow: 1;
-    background: #fff;
-    font-size: 1rem;
-}
-
-
-.playlists-list a, .playlists-list a:visited {
-    color: #484849;
-    text-decoration: none;
-    display: block;
-    padding: 15px 25px;
-    border-bottom: 1px solid #D8D8D8;
-}
-
-.playlists-list a:hover, .playlists-list a:active, .playlists-list a.active, .active-playlist{
-    background: #BFBFBF;
-}
-
-.playlist {
-    flex-basis: 0;
-    flex-grow: 999;
-    flex-direction: column;
-    padding: 2rem;
-}
-
-.single-playlist {
-    display: none;
-}
-
-.active {
-    display: block;
-}
-
-@media only screen and (max-width: 1000px) {
-    main {
-        width: 85%;
-        flex-direction: column;
-    }
+h1 span {
+    font-weight: bold;
+    color: #212121;
 }
