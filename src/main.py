@@ -1,12 +1,12 @@
 import configparser
 import csv
-import requests
 import json
 import os
 
-from exporter import playlists_to_html
+import requests
+
+from exporter import playlists_to_html, load_json
 from exporter import save_to_json
-import exporter
 
 
 def get_playlist_from_csv(csv_file_name: str) -> dict:
@@ -32,39 +32,41 @@ def get_all_playlists_from_csv(directory_name: str):
 
 
 def get_data_for_video(video_id: str) -> dict:
-    res = requests.get(f"https://invidio.xamh.de/api/v1/videos/{video_id}?fields=videoId,title,published,publishedText,author,authorId,authorUrl,videoThumbnails,lengthSeconds,error&pretty=1")
+    params = {
+        "fields": "videoId,title,published,publishedText,author,authorId,authorUrl,videoThumbnails,lengthSeconds,error",
+        "pretty": 1,
+    }
+    res = requests.get(f"https://invidio.xamh.de/api/v1/videos/{video_id}", params=params)
     return json.loads(res.text)
 
 
-def get_data_for_playlist(playlist: dict) -> dict:
-    for video in playlist["videos"]:
-        video['metadata'] = get_data_for_video(video['Video-ID'])
-    return playlist
+def get_data_for_playlists(playlists: list) -> list:
+    for playlist in playlists:
+        for video in playlist["videos"]:
+            video['metadata'] = get_data_for_video(video['Video-ID'])
+    return playlists
 
 
 def main():
     print("### YouTube Data Exporter ###")
-    playlists = get_all_playlists_from_csv("../data/playlists")
-    load_data = False
-    if load_data:
-        for playlist in playlists:
-            playlist = get_data_for_playlist(playlist)
-        save_to_json(playlists, "../output/playlists.json")
-
-
-    playlists = exporter.load_json("../output/playlists.json")
-
-    playlists_to_html(playlists, "../output/youtube.html")
 
     config = configparser.ConfigParser()
     config.read("config.cfg")
 
-    print("[+] Reading Database")
-    if config["input"].getboolean("use_wa_db"):
-       pass
+    if config["output"].getboolean("retrieve_data"):
+        print("[+] Reading CSV files")
+        playlists = get_all_playlists_from_csv(config["input"].get("youtube_csv_export_directory"))
+
+        print("[+] Retrieving additional data using Web API")
+        playlists = get_data_for_playlists(playlists)
+
+        print("[+] Writing playlist JSON file")
+        save_to_json(playlists, config["output"].get("json_output_file"))
 
     if config["output"].getboolean("export_html"):
         print("[+] Exporting to HTML")
+        playlists = load_json(config["output"].get("json_output_file"))
+        playlists_to_html(playlists, config["output"].get("html_output_file"))
 
     print("[+] Finished")
 
