@@ -2,6 +2,7 @@ import configparser
 import csv
 import json
 import os
+import logging
 
 import requests
 
@@ -10,19 +11,25 @@ from exporter import save_to_json
 
 
 def get_playlist_from_csv(csv_file_name: str) -> dict:
-    with open(csv_file_name, newline='') as csvfile:
+    with open(csv_file_name, encoding="utf-8", newline="") as csvfile:
         data = csvfile.readlines()
-        playlist_meta_data = data[:2]
-        playlist_content_data = data[3:]
+        metadata = list(csv.reader(data[1:2], delimiter=","))[0]
+        playlist_content_data = list(csv.reader(data[4:], delimiter=","))
 
         playlist = {
-            "meta":  list(csv.DictReader(playlist_meta_data, delimiter=','))[0],
-            "videos": list(csv.DictReader(playlist_content_data, delimiter=',')),
+            "id": metadata[0],
+            "channel_id": metadata[1],
+            "time_updated": metadata[2],
+            "time_created": metadata[3],
+            "title": metadata[4],
+            "description": metadata[5],
+            "visibility": metadata[6],
+            "videos": [{"id": video[0], "time_added": video[1]} for video in playlist_content_data if len(video) > 1],
         }
         return playlist
 
 
-def get_all_playlists_from_csv(directory_name: str):
+def get_all_playlists_from_csv(directory_name: str) -> list:
     playlists = []
     for file in os.listdir(directory_name):
         if file.endswith(".csv"):
@@ -36,14 +43,15 @@ def get_data_for_video(video_id: str) -> dict:
         "fields": "videoId,title,published,publishedText,author,authorId,authorUrl,videoThumbnails,lengthSeconds,error",
         "pretty": 1,
     }
-    res = requests.get(f"https://invidio.xamh.de/api/v1/videos/{video_id}", params=params)
+    res = requests.get(f"https://invidio.xamh.de//api/v1/videos/{video_id}", params=params)
+    logging.info(res.text)
     return json.loads(res.text)
 
 
 def get_data_for_playlists(playlists: list) -> list:
     for playlist in playlists:
         for video in playlist["videos"]:
-            video['metadata'] = get_data_for_video(video['Video-ID'])
+            video["metadata"] = get_data_for_video(video["id"])
     return playlists
 
 
