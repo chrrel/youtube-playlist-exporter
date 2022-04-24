@@ -18,7 +18,7 @@ class InvidiousApi:
 
     def get_data_for_video(self, video_id: str) -> dict:
         params = {
-            "fields": "videoId,title,published,publishedText,author,authorId,authorUrl,videoThumbnails,lengthSeconds,error",
+            "fields": "videoId,title,published,author,authorId,authorUrl,videoThumbnails,lengthSeconds,error",
             "pretty": 1,
         }
         try:
@@ -63,8 +63,6 @@ def main():
 
     if config["output"].getboolean("retrieve_data"):
         print("[+] Reading CSV files")
-
-        # Get all playlists from CSV files
         directory_name = config["input"].get("youtube_csv_export_directory")
         playlist_file_paths = glob.glob(f"{directory_name}/*.csv")
         playlists = [get_playlist_from_csv(playlist_path) for playlist_path in playlist_file_paths]
@@ -77,7 +75,7 @@ def main():
         save_to_json(playlists, config["output"].get("json_output_file"))
 
     if config["output"].getboolean("export_html"):
-        print("[+] Exporting to HTML")
+        print("[+] Exporting JSON data to HTML")
         playlists = load_json(config["output"].get("json_output_file"))
         playlists_to_html(playlists, config["output"].get("html_output_file"))
 

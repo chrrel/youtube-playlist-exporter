@@ -85,6 +85,26 @@ main {
     margin: 0 15px 0 0;
 }
 
+.video-duration {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.video-thumbnail-container {
+    position: relative;
+}
+
+p {
+    font-size: 1rem;
+}
+
 a, a:link, a:visited {
     color: #484849;
     text-decoration: none;
