@@ -1,5 +1,6 @@
 import csv
 import json
+from string import Template
 
 
 def _load_file_content(filepath: str) -> str:
@@ -7,26 +8,28 @@ def _load_file_content(filepath: str) -> str:
         return file.read()
 
 
-def save_to_json(data, filepath: str):
+def _write_file_content(data: str, filepath: str):
     with open(filepath, "w", encoding="utf-8") as file:
-        json.dump(data, file)
+        file.write(data)
+
+
+def save_to_json(data, filepath: str):
+    _write_file_content(filepath, json.dumps(data))
 
 
 def load_json(filepath: str):
-    with open(filepath, "r", encoding="utf-8") as file:
-        return json.load(file)
+    return json.loads(_load_file_content(filepath))
 
 
-def _save_to_html_file(playlist_content: str, playlists_list: str, filepath: str):
-    # Use template as f-string and populate it with data
-    js_code = _load_file_content("res/main.js")
-    css_code = _load_file_content("res/styles.css")
-    # Avoid SyntaxError: f-string must not include a backslash
-    template = _load_file_content("res/template.html").replace("\n", "")
-    html_output = f"{template}".format(**locals())
-
-    with open(filepath, "w", encoding="utf-8") as file:
-        file.write(html_output)
+def save_to_html_file(playlist_content: str, playlists_list: str, filepath: str):
+    t = Template(_load_file_content("res/template.html"))
+    html_output = t.substitute(
+        js_code=_load_file_content("res/main.js"),
+        css_code=_load_file_content("res/styles.css"),
+        playlist_content=playlist_content,
+        playlists_list=playlists_list,
+    )
+    _write_file_content(html_output, filepath)
 
 
 def get_playlist_from_csv(csv_file_name: str) -> dict:

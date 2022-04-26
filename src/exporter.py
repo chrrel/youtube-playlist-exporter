@@ -1,9 +1,8 @@
-import html
 import datetime
-
+import html
 from string import Template
 
-from utils import _save_to_html_file
+from utils import save_to_html_file
 
 
 def playlists_to_html(playlists: list, filepath: str) -> None:
@@ -24,7 +23,7 @@ def playlists_to_html(playlists: list, filepath: str) -> None:
             videos="".join(_video_to_html(video) for video in playlist["videos"]),
         )
 
-    _save_to_html_file(playlist_content, playlists_list, filepath)
+    save_to_html_file(playlist_content, playlists_list, filepath)
 
 
 def _video_to_html(video: dict) -> str:
@@ -37,7 +36,7 @@ def _video_to_html(video: dict) -> str:
                 <span class="video-duration">$length</span>
             </div>
             <div><h3><a href="https://www.youtube.com/watch?v=$video_id">$title</a></h3>
-            <h4><a href="https://www.youtube.com$author_url">$author</a> $published</h4></div>
+            <h4><a href="https://www.youtube.com$author_url">$author</a>$published</h4></div>
         </div>
         """
     t = Template(video_template)

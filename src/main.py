@@ -1,9 +1,9 @@
 import configparser
 import glob
 
+from Invidiousapi import InvidiousApi
 from exporter import playlists_to_html
 from utils import save_to_json, load_json, get_playlist_from_csv
-from Invidiousapi import InvidiousApi
 
 
 def main():
