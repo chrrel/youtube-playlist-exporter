@@ -1,5 +1,6 @@
 import configparser
 import glob
+import time
 
 from Invidiousapi import InvidiousApi
 from exporter import playlists_to_html
@@ -12,23 +13,33 @@ def main():
     config = configparser.ConfigParser()
     config.read("config.cfg")
 
-    if config["output"].getboolean("retrieve_data"):
+    retrieve_data = config["output"].getboolean("retrieve_data")
+    export_html = config["output"].getboolean("export_html")
+    csv_directory_name = config["input"].get("youtube_csv_export_directory")
+    json_output_directory = config['output'].get('json_output_directory')
+    html_output_file = config["output"].get("html_output_file")
+    invidious_api_base_url = config["input"].get("invidious_api_base_url")
+
+    if retrieve_data:
         print("[+] Reading CSV files")
-        directory_name = config["input"].get("youtube_csv_export_directory")
-        playlist_file_paths = glob.glob(f"{directory_name}/*.csv")
+        playlist_file_paths = glob.glob(f"{csv_directory_name}/*.csv")
         playlists = [get_playlist_from_csv(playlist_path) for playlist_path in playlist_file_paths]
 
         print("[+] Retrieving additional data using Invidious API")
-        invidious = InvidiousApi(config["input"].get("invidious_api_base_url"))
+        start_time = time.time()
+        invidious = InvidiousApi(invidious_api_base_url)
         playlists = invidious.get_data_for_playlists(playlists)
+        print(f"[+] Downloaded data for {len(playlists)} playlists in {time.time() - start_time} seconds")
 
-        print("[+] Writing playlist JSON file")
-        save_to_json(playlists, config["output"].get("json_output_file"))
+        print("[+] Writing playlist JSON files")
+        for playlist in playlists:
+            save_to_json(playlist, f"{json_output_directory}/{playlist['id']}.json")
 
-    if config["output"].getboolean("export_html"):
+    if export_html:
         print("[+] Exporting JSON data to HTML")
-        playlists = load_json(config["output"].get("json_output_file"))
-        playlists_to_html(playlists, config["output"].get("html_output_file"))
+        playlist_json_file_paths = glob.glob(f"{json_output_directory}/*.json")
+        playlists = [load_json(playlist_path) for playlist_path in playlist_json_file_paths]
+        playlists_to_html(playlists, html_output_file)
 
     print("[+] Finished")
 

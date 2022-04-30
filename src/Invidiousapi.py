@@ -17,7 +17,6 @@ class InvidiousApi:
         }
         try:
             res = requests.get(f"{self.base_url}/api/v1/videos/{video_id}", params=params)
-            logging.info(res.text)
             return json.loads(res.text)
         except Exception as e:
             logging.error(e)
@@ -26,5 +25,6 @@ class InvidiousApi:
     def get_data_for_playlists(self, playlists: list) -> list:
         for playlist in playlists:
             for video in playlist["videos"]:
+                logging.debug(f"Retrieving data for {video['id']}")
                 video["metadata"] = self.get_data_for_video(video["id"])
         return playlists

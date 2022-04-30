@@ -14,7 +14,7 @@ def _write_file_content(data: str, filepath: str):
 
 
 def save_to_json(data, filepath: str):
-    _write_file_content(filepath, json.dumps(data))
+    _write_file_content(json.dumps(data), filepath)
 
 
 def load_json(filepath: str):
