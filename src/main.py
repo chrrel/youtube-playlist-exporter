@@ -1,6 +1,7 @@
 import configparser
 import glob
 import time
+import logging
 
 from Invidiousapi import InvidiousApi
 from exporter import playlists_to_html
@@ -45,4 +46,5 @@ def main():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     main()
