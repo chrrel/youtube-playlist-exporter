@@ -15,6 +15,7 @@ class HtmlExporter:
         playlists_list = ""
         playlist_content = ""
 
+        playlists = sorted(playlists, key=lambda d: d['time_updated'], reverse=True)
         for playlist in playlists:
             # Append name to list of playlists
             t = Template('<a href="#$playlist_id">$playlist_title</a>')
@@ -42,8 +43,6 @@ class HtmlExporter:
         save_to_html_file(playlist_content, playlists_list, filepath)
 
     def _video_to_html(self, video: dict) -> str:
-        data = video["metadata"]
-
         t = Template(f"""
             <div class="video">
                 <div class="video-thumbnail-container">
@@ -56,6 +55,7 @@ class HtmlExporter:
                 </div>
             </div>
             """)
+        data = video["metadata"]
         if data and not data.get("error"):
             return t.substitute(
                 thumbnail=self._esc(data.get("videoThumbnails")[4].get("url")),

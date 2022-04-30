@@ -1,10 +1,10 @@
 import configparser
 import glob
-import time
 import logging
+import time
 
-from Invidiousapi import InvidiousApi
 from HtmlExporter import HtmlExporter
+from InvidiousApi import InvidiousApi
 from utils import save_to_json, load_json, get_playlist_from_csv
 
 
@@ -13,7 +13,6 @@ def main():
 
     config = configparser.ConfigParser()
     config.read("config.cfg")
-
     retrieve_data = config["output"].getboolean("retrieve_data")
     export_html = config["output"].getboolean("export_html")
     invidious_api_base_url = config["input"].get("invidious_api_base_url")
