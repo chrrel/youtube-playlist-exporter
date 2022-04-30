@@ -17,7 +17,7 @@ def main():
     retrieve_data = config["output"].getboolean("retrieve_data")
     export_html = config["output"].getboolean("export_html")
     csv_directory_name = config["input"].get("youtube_csv_export_directory")
-    json_output_directory = config['output'].get('json_output_directory')
+    json_output_file = config['output'].get('json_output_file')
     html_output_file = config["output"].get("html_output_file")
     invidious_api_base_url = config["input"].get("invidious_api_base_url")
 
@@ -32,14 +32,11 @@ def main():
         playlists = invidious.get_data_for_playlists(playlists)
         print(f"[+] Downloaded data for {len(playlists)} playlists in {time.time() - start_time} seconds")
 
-        print("[+] Writing playlist JSON files")
-        for playlist in playlists:
-            save_to_json(playlist, f"{json_output_directory}/{playlist['id']}.json")
-
+        print("[+] Writing playlist JSON file")
+        save_to_json(playlists, json_output_file)
     if export_html:
         print("[+] Exporting JSON data to HTML")
-        playlist_json_file_paths = glob.glob(f"{json_output_directory}/*.json")
-        playlists = [load_json(playlist_path) for playlist_path in playlist_json_file_paths]
+        playlists = load_json(json_output_file)
         playlists_to_html(playlists, html_output_file)
 
     print("[+] Finished")

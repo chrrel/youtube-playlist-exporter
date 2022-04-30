@@ -24,6 +24,7 @@ main {
     background: #f1f1f1;
     border: 1px solid #d9d9d9;
     display: flex;
+    height: 90vh;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -39,6 +40,9 @@ main {
     flex-grow: 1;
     background: #ffffff;
     font-size: 1rem;
+    overflow: auto;
+    scrollbar-color: #CCCCCC #FFFFFF;
+    scrollbar-width: thin;
 }
 
 .playlists-list a, .playlists-list a:visited {
@@ -59,6 +63,9 @@ main {
     flex-grow: 999;
     flex-direction: column;
     padding: 2rem;
+    overflow: auto;
+    scrollbar-color: #CCCCCC #ECE5DD;
+    scrollbar-width: thin;
 }
 
 .single-playlist {
@@ -112,6 +119,18 @@ a, a:link, a:visited {
     text-decoration: none;
 }
 
+a.yt-playlist-link {
+    font-size: 1rem;
+    background: #cc0000;
+    color: #ffffff;
+    padding: 10px 15px;
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
 /* Headings */
 h1 {
     margin: 0;
@@ -123,6 +142,7 @@ h2 {
     font-weight: normal;
     font-size: 1.4rem;
     margin: 0 0 2rem 0;
+    float: left;
 }
 
 h3 {
