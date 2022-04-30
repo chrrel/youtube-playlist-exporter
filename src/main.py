@@ -4,7 +4,7 @@ import time
 import logging
 
 from Invidiousapi import InvidiousApi
-from exporter import playlists_to_html
+from HtmlExporter import HtmlExporter
 from utils import save_to_json, load_json, get_playlist_from_csv
 
 
@@ -16,10 +16,11 @@ def main():
 
     retrieve_data = config["output"].getboolean("retrieve_data")
     export_html = config["output"].getboolean("export_html")
+    invidious_api_base_url = config["input"].get("invidious_api_base_url")
     csv_directory_name = config["input"].get("youtube_csv_export_directory")
     json_output_file = config['output'].get('json_output_file')
     html_output_file = config["output"].get("html_output_file")
-    invidious_api_base_url = config["input"].get("invidious_api_base_url")
+    video_link_base_url = config["output"].get("video_link_base_url")
 
     if retrieve_data:
         print("[+] Reading CSV files")
@@ -37,7 +38,8 @@ def main():
     if export_html:
         print("[+] Exporting JSON data to HTML")
         playlists = load_json(json_output_file)
-        playlists_to_html(playlists, html_output_file)
+        exporter = HtmlExporter(video_link_base_url)
+        exporter.playlists_to_html(playlists, html_output_file)
 
     print("[+] Finished")
 
