@@ -46,6 +46,6 @@ def get_playlist_from_csv(csv_file_name: str) -> dict:
             "title": metadata[4],
             "description": metadata[5],
             "visibility": metadata[6],
-            "videos": [{"id": video[0], "time_added": video[1]} for video in playlist_content_data if len(video) > 1],
+            "videos": [{"id": video[0].strip(), "time_added": video[1]} for video in playlist_content_data if len(video) > 1],
         }
         return playlist
