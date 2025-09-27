@@ -71,9 +71,9 @@ class HtmlExporter:
                 thumbnail="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
                 length="0",
                 video_url=f"{self.video_link_base_url}/watch?v={self._esc(video.get('id'))}",
-                title=self._esc(data.get("error")),
+                title=self._esc(data.get("videoId")),
                 author_url="",
-                author="",
+                author=self._esc(data.get("error")),
                 published=""
             )
 

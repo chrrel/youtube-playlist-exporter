@@ -28,6 +28,7 @@ class InvidiousApi:
             if 501 <= res.status_code < 600:
                 # Take a break as sever might be overloaded. Start at 501 since the API uses 500 e.g. for private videos
                 time.sleep(5)
+            res.raise_for_status()
             data = json.loads(res.text)
             # The response has to contain the videoId, so add it in case it does not exist
             if "videoId" not in data:
@@ -48,7 +49,7 @@ class InvidiousApi:
         with ThreadPoolExecutor(max_workers=24) as executor:
             # Wrap in a list() to wait for all requests to complete
             for video_data in list(executor.map(self.get_data_for_video, video_ids_unique)):
-                videos_data[video_data['videoId']] = video_data
+                videos_data[video_data["videoId"]] = video_data
 
         # Use the retrieved data to augment all playlists with the additional data
         for playlist in playlists:

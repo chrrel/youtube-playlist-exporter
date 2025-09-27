@@ -14,7 +14,11 @@ if you delete your YouTube account. Note that the videos are not downloaded.
 1. Download your YouTube data using [Google Takeout](https://takeout.google.com). 
 This will yield a zip file containing CSV files, one for each playlist.
 2. Supply all configuration values, especially the path to your CSV files, in `config.cfg`.
-3. Execute the script by running `python3 main.py`.
+3. Execute the script:
+
+```sh
+python3 youtube-playlist-exporter config.cfg 
+```
 
 ## License
 

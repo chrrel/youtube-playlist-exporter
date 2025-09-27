@@ -1,6 +1,7 @@
 import configparser
 import glob
 import logging
+import sys
 import time
 
 from HtmlExporter import HtmlExporter
@@ -8,16 +9,16 @@ from InvidiousApi import InvidiousApi
 from utils import save_to_json, load_json, get_playlist_from_csv
 
 
-def main():
+def main(config_path: str):
     print("### YouTube Data Exporter ###")
 
     config = configparser.ConfigParser()
-    config.read("config.cfg")
+    config.read(config_path)
     retrieve_data = config["output"].getboolean("retrieve_data")
     export_html = config["output"].getboolean("export_html")
     invidious_api_base_url = config["input"].get("invidious_api_base_url")
     csv_directory_name = config["input"].get("youtube_csv_export_directory")
-    json_output_file = config['output'].get('json_output_file')
+    json_output_file = config["output"].get("json_output_file")
     html_output_file = config["output"].get("html_output_file")
     video_link_base_url = config["output"].get("video_link_base_url")
 
@@ -44,5 +45,8 @@ def main():
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python3 youtube-playlist-exporter config.cfg")
+        exit(1)
     logging.basicConfig(level=logging.INFO)
-    main()
+    main(sys.argv[1])

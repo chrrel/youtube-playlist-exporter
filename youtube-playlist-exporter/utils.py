@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 from string import Template
 
 
@@ -22,10 +23,13 @@ def load_json(filepath: str):
 
 
 def save_to_html_file(playlist_content: str, playlists_list: str, filepath: str):
-    t = Template(_load_file_content("res/template.html"))
+    template_path = os.path.join(os.path.dirname(__file__), "res/template.html")
+    js_path = os.path.join(os.path.dirname(__file__), "res/main.js")
+    css_path = os.path.join(os.path.dirname(__file__), "res/styles.css")
+    t = Template(_load_file_content(template_path))
     html_output = t.substitute(
-        js_code=_load_file_content("res/main.js"),
-        css_code=_load_file_content("res/styles.css"),
+        js_code=_load_file_content(js_path),
+        css_code=_load_file_content(css_path),
         playlist_content=playlist_content,
         playlists_list=playlists_list,
     )
